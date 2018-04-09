@@ -14,11 +14,12 @@ class CPU {
         this.ram = ram;
 
         this.reg = new Array(8).fill(0); // General-purpose registers R0-R7
-        
+        this.reg.IR = null;
+
         // Special-purpose registers
         this.reg.PC = 0; // Program Counter
     }
-	
+
     /**
      * Store value in memory address, useful for program loading
      */
@@ -69,13 +70,18 @@ class CPU {
         // index into memory of the instruction that's about to be executed
         // right now.)
 
+        this.reg.IR = this.ram.read(this.reg.PC); // grab byte 1
+
         // !!! IMPLEMENT ME
 
         // Debugging output
-        //console.log(`${this.reg.PC}: ${IR.toString(2)}`);
+        console.log(`${this.reg.PC}: ${this.reg.IR.toString(2)}`);
 
         // Get the two bytes in memory _after_ the PC in case the instruction
         // needs them.
+
+        let byte1 = this.ram.read(this.reg.PC + 1); // grab byte 2
+        let byte2 = this.ram.read(this.reg.PC + 2); // grab byte 3
 
         // !!! IMPLEMENT ME
 
@@ -88,7 +94,7 @@ class CPU {
         // can be 1, 2, or 3 bytes long. Hint: the high 2 bits of the
         // instruction byte tells you how many bytes follow the instruction byte
         // for any particular instruction.
-        
+
         // !!! IMPLEMENT ME
     }
 }
