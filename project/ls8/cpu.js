@@ -13,7 +13,7 @@ class CPU {
     constructor(ram) {
         this.ram = ram;
 
-        this.reg = new Array(8).fill(0); // General-purpose registers R0-R7
+        this.reg = new Array(8).fill(0); // General-purpose registers R0-R7 (8 bit)
         this.reg.IR = null;
 
         // Special-purpose registers
@@ -75,7 +75,8 @@ class CPU {
         // !!! IMPLEMENT ME
 
         // Debugging output
-        console.log(`${this.reg.PC}: ${this.reg.IR.toString(2)}`);
+        console.log(`this.reg.IR ${this.reg.IR}`);
+        console.log(`this.reg.PC: ${this.reg.PC} || this.reg.IR: ${this.reg.IR.toString(2)}`);
 
         // Get the two bytes in memory _after_ the PC in case the instruction
         // needs them.
@@ -87,7 +88,23 @@ class CPU {
 
         // Execute the instruction. Perform the actions for the instruction as
         // outlined in the LS-8 spec.
-
+        switch (this.reg.IR) {
+            case 153: // LDI
+              console.log('LDI ran: Store');
+              console.log(`byte1: ${byte1}, byte2: ${byte2}`);
+              this.reg[byte1] = byte2;
+              console.log(this.reg);
+              break;
+            case 67: // PRN
+              console.log('PRN ran: Print');
+              console.log(`Prints the value in ${byte1}: ${this.reg[byte1]}`)
+              break;
+            case 1: // HLT
+              console.log('HLT ran: Halt and Quit');
+              //this.HLT();
+              this.stopClock();
+              break;
+        }
         // !!! IMPLEMENT ME
 
         // Increment the PC register to go to the next instruction. Instructions
@@ -96,6 +113,21 @@ class CPU {
         // for any particular instruction.
 
         // !!! IMPLEMENT ME
+        // this.reg.PC += parseInt(this.reg.IR >> 6, 2);
+        console.log(parseInt(this.reg.IR >> 6, 2));
+        if (this.reg.IR.toString(2).length === 8) {
+          if (this.reg.IR.toString(2).charAt(0) == 1) {
+            this.reg.PC += 3;
+          } else if (this.reg.IR.toString(2).charAt(1) == 1) {
+            this.reg.PC += 2;
+          }
+        } else if (this.reg.IR.toString(2).length === 7) {
+          if (this.reg.IR.toString(2).charAt(0) == 1) {
+            this.reg.PC += 2;
+          }
+        } else {
+          this.reg.PC++;
+        }
     }
 }
 
