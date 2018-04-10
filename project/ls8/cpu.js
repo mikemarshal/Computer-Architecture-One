@@ -25,6 +25,7 @@ class CPU {
      */
     poke(address, value) {
         this.ram.write(address, value);
+        console.log(`address: ${address}, value: ${value}`)
     }
 
     /**

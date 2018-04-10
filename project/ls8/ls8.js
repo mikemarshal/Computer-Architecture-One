@@ -1,5 +1,10 @@
 const RAM = require('./ram');
 const CPU = require('./cpu');
+var fs = require('fs');
+const FILE = process.argv[2];
+var lineReader = require('readline').createInterface({
+  input: require('fs').createReadStream(`./${FILE}.ls8`)
+});
 
 /**
  * Load an LS8 program into memory
@@ -9,7 +14,7 @@ const CPU = require('./cpu');
 function loadMemory() {
 
     // Hardcoded program to print the number 8 on the console
-
+    console.log(lineReader);
     const program = [ // print8.ls8
       "10011001", // # LDI R0,8
       "00000000",
@@ -24,11 +29,20 @@ function loadMemory() {
       "00000000",
       "00000001" // # HLT
     ];
-
+    let counter = 0;
+    lineReader.on('line', function (line) {
+      cpu.poke(counter, parseInt(line, 2));
+      console.log(line);
+      counter++;
+    });
+    lineReader.on('close', () => {
+      console.log('finished reading');
+      cpu.startClock();
+    });
     // Load the program into the CPU's memory a byte at a time
-    for (let i = 0; i < program.length; i++) {
-        cpu.poke(i, parseInt(program[i], 2));
-    }
+    // for (let i = 0; i < program.length; i++) {
+    //     cpu.poke(i, parseInt(program[i], 2));
+    // }
 }
 
 /**
@@ -41,5 +55,3 @@ let cpu = new CPU(ram);
 // TODO: get name of ls8 file to load from command line
 
 loadMemory(cpu);
-
-cpu.startClock();
