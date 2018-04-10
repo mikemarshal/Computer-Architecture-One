@@ -2,6 +2,10 @@
  * LS-8 v2.0 emulator skeleton code
  */
 
+const LDI = 10011001;
+const PRN = 01000011;
+const HLT = 00000001;
+
 /**
  * Class for simulating a simple Computer (CPU & memory)
  */
@@ -13,7 +17,6 @@ class CPU {
     this.ram = ram;
 
     this.reg = new Array(8).fill(0); // General-purpose registers R0-R7
-    this.reg.IR = null;
     // Special-purpose registers
     this.reg.PC = 0; // Program Counter
   }
@@ -54,7 +57,7 @@ class CPU {
   alu(op, regA, regB) {
     switch (op) {
       case "MUL":
-        // !!! IMPLEMENT ME
+        this.reg[regA] = regA * regB;
         break;
     }
   }
@@ -69,13 +72,13 @@ class CPU {
     // right now.)
 
     // !!! IMPLEMENT ME
+    let IR = this.ram.read(this.reg.PC);
 
     // Debugging output
-    //console.log(`${this.reg.PC}: ${IR.toString(2)}`);
+    //console.log(`${this.reg.PC}: ${this.reg.IR.toString(2)}`);
 
     // Get the two bytes in memory _after_ the PC in case the instruction
     // needs them.
-    this.reg.ID = this.ram.read(this.reg.PC);
 
     let byte1 = this.ram.read(this.reg.PC + 1);
     let byte2 = this.ram.read(this.reg.PC + 2);
@@ -85,6 +88,39 @@ class CPU {
     // Execute the instruction. Perform the actions for the instruction as
     // outlined in the LS-8 spec.
 
+    // LDI
+    const LDI = (byte1, byte2) => {
+      this.reg[byte1] = byte2;
+    };
+
+    // PRN
+    const PRN = (byte1) => {
+        console.log(this.reg[byte1]);
+    }
+    
+    // HLT
+    const HLT = () => {
+        this.stopClock();
+    }
+
+    switch(this.reg.IR) {
+        case LDI:
+        console.log("LDI hit");
+        this.LDI();
+        break;
+
+        case PRN:
+        console.log("PRN hit");
+        this.PRN();
+        break;
+
+        case HLT:
+        console.log("HLT hit");
+        this.HLT();
+        break;
+    }
+    
+
     // !!! IMPLEMENT ME
 
     // Increment the PC register to go to the next instruction. Instructions
@@ -93,6 +129,7 @@ class CPU {
     // for any particular instruction.
 
     // !!! IMPLEMENT ME
+    this.reg.PC++;
   }
 }
 
