@@ -89,6 +89,12 @@ class CPU {
         // Execute the instruction. Perform the actions for the instruction as
         // outlined in the LS-8 spec.
         switch (this.reg.IR) {
+            case 170: // MUL
+              console.log('MUL ran: multiply and store');
+              console.log(`Multiplied ${this.reg[byte1]} by ${this.reg[byte2]}`);
+              this.reg[byte1] = this.reg[byte1] * this.reg[byte2];
+              console.log(`Register: ${this.reg}`);
+            break;
             case 153: // LDI
               console.log('LDI ran: Store');
               console.log(`byte1: ${byte1}, byte2: ${byte2}`);
@@ -114,18 +120,20 @@ class CPU {
 
         // !!! IMPLEMENT ME
         // this.reg.PC += parseInt(this.reg.IR >> 6, 2);
-        console.log(parseInt(this.reg.IR >> 6, 2));
         if (this.reg.IR.toString(2).length === 8) {
           if (this.reg.IR.toString(2).charAt(0) == 1) {
             this.reg.PC += 3;
           } else if (this.reg.IR.toString(2).charAt(1) == 1) {
             this.reg.PC += 2;
           }
+          console.log('-------------------------------');
         } else if (this.reg.IR.toString(2).length === 7) {
           if (this.reg.IR.toString(2).charAt(0) == 1) {
             this.reg.PC += 2;
           }
+          console.log('-------------------------------');
         } else {
+          console.log('-------------------------------');
           this.reg.PC++;
         }
     }
