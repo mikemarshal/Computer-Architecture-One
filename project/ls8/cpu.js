@@ -57,8 +57,9 @@ class CPU {
     alu(op, regA, regB) {
         switch (op) {
             case 'MUL':
-                // !!! IMPLEMENT ME
-                break;
+            // !!! IMPLEMENT ME
+            return (regA * regB);
+            break;
         }
     }
 
@@ -91,9 +92,10 @@ class CPU {
         // outlined in the LS-8 spec.
         switch (this.reg.IR) {
             case 170: // MUL
+
               console.log('MUL ran: multiply and store');
               console.log(`Multiplied ${this.reg[byte1]} by ${this.reg[byte2]}`);
-              this.reg[byte1] = this.reg[byte1] * this.reg[byte2];
+              this.reg[byte1] = this.alu('MUL', this.reg[byte1], this.reg[byte2]);
               console.log(`Register: ${this.reg}`);
             break;
             case 153: // LDI
